@@ -1,3 +1,8 @@
+import sys
+
+import xapi_openstack.list_vhds
+
+
 def add_glance_plugin():
     """ssh to a xapi host, copy the required plugins, so that it can
     communicate with glance"""
@@ -6,4 +11,4 @@ def add_glance_plugin():
 
 
 def list_vhds():
-    pass
+    xapi_openstack.list_vhds.main(sys.argv)
