@@ -3,3 +3,7 @@ def add_glance_plugin():
     communicate with glance"""
 
     raise NotImplementedError("This is not implemented yet")
+
+
+def list_vhds():
+    pass
