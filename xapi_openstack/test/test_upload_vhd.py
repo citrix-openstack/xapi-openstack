@@ -1,7 +1,7 @@
 import unittest
 import mock
 
-from xapi_openstack.upload_vhd import UploadVHD
+from xapi_openstack.upload_vhd import UploadVHD, to_host_port
 
 
 class UploadVhdValidationTestCase(unittest.TestCase):
@@ -79,4 +79,9 @@ class InstructXapiToUploadTestCase(unittest.TestCase):
         result = upload.get_single_host(session=session)
 
         self.assertEquals(myhost, result)
+
+class UtilsTestCase(unittest.TestCase):
+    def test_to_host_port(self):
+        host, port = to_host_port('http://127.0.0.1:9292')
+        self.assertEquals("127.0.0.1", host)
 
