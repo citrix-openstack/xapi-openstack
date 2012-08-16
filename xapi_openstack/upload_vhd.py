@@ -21,3 +21,12 @@ class UploadVHD(object):
             self.valid = True
         except Invalid:
             pass
+
+    def get_keystone_client(self, ksclient=None):
+        return ksclient.Client(
+            username=self.args['username'],
+            password=self.args['password'],
+            insecure=False,
+            tenant_name=self.args['tenant_name'],
+            auth_url=self.args['auth_url'],
+            tenant_id=None)
