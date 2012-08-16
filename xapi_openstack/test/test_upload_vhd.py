@@ -52,15 +52,21 @@ class UploadVhdKeystoneCallsTestCase(unittest.TestCase):
 
 class InstructXapiToUploadTestCase(unittest.TestCase):
     def test_get_xapi_session(self):
+        session = mock.Mock()
         xapi = mock.Mock()
+        xapi.Session.return_value = session
         c = mock.call
 
         upload = UploadVHD(xapiurl="someurl", xapiuser='xapiuser', xapipass='xapipass')
 
-        upload.get_xapi_session(xapi=xapi)
+        result = upload.get_xapi_session(xapi=xapi)
 
         self.assertEquals([
             c.Session("someurl"),
             c.Session().login_with_password('xapiuser', 'xapipass')
             ],
             xapi.mock_calls)
+
+        self.assertEquals(
+            session, result)
+

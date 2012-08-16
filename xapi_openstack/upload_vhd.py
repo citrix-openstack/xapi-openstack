@@ -36,3 +36,4 @@ class UploadVHD(object):
         session.login_with_password(
             self.args['xapiuser'],
             self.args['xapipass'])
+        return session
