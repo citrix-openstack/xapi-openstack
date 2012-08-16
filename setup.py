@@ -6,7 +6,7 @@ setup(
     version='0.0',
     description='Xen API and OpenStack related utilities',
     packages=['xapi_openstack'],
-    install_requires=['XenAPI'],
+    install_requires=['XenAPI', 'formencode'],
     entry_points = {
         'console_scripts' : [
             'add_glance_plugin = xapi_openstack.scripts:add_glance_plugin',
