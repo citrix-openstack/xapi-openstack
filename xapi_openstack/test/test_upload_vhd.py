@@ -70,3 +70,13 @@ class InstructXapiToUploadTestCase(unittest.TestCase):
         self.assertEquals(
             session, result)
 
+    def test_get_single_host(self):
+        myhost = object()
+        session = mock.Mock()
+        session.xenapi.host.get_all.return_value = [myhost]
+
+        upload = UploadVHD()
+        result = upload.get_single_host(session=session)
+
+        self.assertEquals(myhost, result)
+

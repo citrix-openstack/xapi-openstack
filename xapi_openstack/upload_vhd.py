@@ -37,3 +37,7 @@ class UploadVHD(object):
             self.args['xapiuser'],
             self.args['xapipass'])
         return session
+
+    def get_single_host(self, session=None):
+        host, = session.xenapi.host.get_all()
+        return host
