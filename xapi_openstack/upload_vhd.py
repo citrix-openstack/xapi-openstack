@@ -30,3 +30,9 @@ class UploadVHD(object):
             tenant_name=self.args['tenant_name'],
             auth_url=self.args['auth_url'],
             tenant_id=None)
+
+    def get_xapi_session(self, xapi=None):
+        session = xapi.Session(self.args['xapiurl'])
+        session.login_with_password(
+            self.args['xapiuser'],
+            self.args['xapipass'])
