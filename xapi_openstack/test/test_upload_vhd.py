@@ -109,9 +109,3 @@ class ConnectToKeystoneTestCase(unittest.TestCase):
 
         self.assertEquals("127.0.0.1", connector.glance_host)
         self.assertEquals(9292, connector.glance_port)
-
-
-class UtilsTestCase(unittest.TestCase):
-    def test_to_host_port(self):
-        host, port = to_host_port('http://127.0.0.1:9292')
-        self.assertEquals("127.0.0.1", host)
