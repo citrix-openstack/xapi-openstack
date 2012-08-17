@@ -7,6 +7,22 @@ from xapi_openstack.upload_vhd import (
 
 
 class UploadVHDTestCase(unittest.TestCase):
+    def test_valid_parameter_set(self):
+        upload_vhd = UploadVHD(
+            xapiurl='xapiurl', xapiuser='xapiuser', xapipass='xapipass')
+
+        try:
+            upload_vhd.validate()
+        except Invalid:
+            raise AssertionError()
+
+    def test_missing_a_parameter(self):
+        upload_vhd = UploadVHD(
+            xapiuser='xapiuser', xapipass='xapipass')
+
+        with self.assertRaises(Invalid):
+            upload_vhd.validate()
+
     def test_get_xapi_session(self):
         session = mock.Mock()
         xapi = mock.Mock()

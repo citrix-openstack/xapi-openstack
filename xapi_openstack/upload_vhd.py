@@ -9,14 +9,18 @@ class ConnectRequest(Schema):
     auth_url = validators.String(not_empty=True)
 
 
-class ConnectToKeystone(object):
+class ValidatingCommand(object):
+    schema = None
+
+    def validate(self):
+        self.schema().to_python(self.args, None)
+
+
+class ConnectToKeystone(ValidatingCommand):
     schema = ConnectRequest
 
     def __init__(self, **args):
         self.args = args
-
-    def validate(self):
-        self.schema().to_python(self.args, None)
 
     def get_keystone_client(self, ksclient=None):
         return ksclient.Client(
@@ -45,12 +49,17 @@ class ConnectToKeystone(object):
         return self._get_endpoint_urlobj().port
 
 
-class UploadVHD(object):
+class UploadVHDSchema(Schema):
+    xapiurl = validators.String(not_empty=True)
+    xapiuser = validators.String(not_empty=True)
+    xapipass = validators.String(not_empty=True)
+
+
+class UploadVHD(ValidatingCommand):
+    schema = UploadVHDSchema
+
     def __init__(self, **args):
         self.args = args
-
-    def validate(self):
-        pass
 
     def get_xapi_session(self, xapi=None):
         session = xapi.Session(self.args['xapiurl'])
