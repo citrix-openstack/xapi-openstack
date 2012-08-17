@@ -2,7 +2,7 @@ import unittest
 import mock
 
 from xapi_openstack.upload_vhd import (
-    GetXAPIHost, ConnectToKeystone, Invalid, UploadVHD
+    GetXAPIHost, ConnectToKeystone, Invalid, UploadVHD, KSClient
 )
 
 
@@ -88,7 +88,7 @@ class ConnectToKeystoneTestCase(unittest.TestCase):
             tenant_name="demo",
             auth_url="http://127.0.0.1:5000/v2.0"))
 
-        client = connect.get_keystone_client(ksclient=ksclient)
+        client = connect(ksclient=ksclient)
 
         self.assertEquals(
             [c.Client(
@@ -99,32 +99,26 @@ class ConnectToKeystoneTestCase(unittest.TestCase):
             ksclient.mock_calls
         )
 
+
+class KSClientTestCase(unittest.TestCase):
     def test_auth_token(self):
         atoken = object()
         client = mock.Mock()
         client.auth_token = atoken
 
-        class MockConnector(ConnectToKeystone):
-            def get_keystone_client(self, ksclient=None):
-                return client
+        ksclient = KSClient(client)
 
-        connect = MockConnector()
-
-        self.assertEquals(atoken, connect.auth_token)
+        self.assertEquals(atoken, ksclient.auth_token)
 
     def test_glance_host_port(self):
         atoken = object()
         client = mock.Mock()
         client.service_catalog.url_for.return_value = "http://127.0.0.1:9292"
 
-        class MockConnector(ConnectToKeystone):
-            def get_keystone_client(self, ksclient=None):
-                return client
+        ksclient = KSClient(client)
 
-        connect = MockConnector()
-
-        self.assertEquals("127.0.0.1", connect.glance_host)
-        self.assertEquals(9292, connect.glance_port)
+        self.assertEquals("127.0.0.1", ksclient.glance_host)
+        self.assertEquals(9292, ksclient.glance_port)
 
 
 class UploadVHDTestCase(unittest.TestCase):

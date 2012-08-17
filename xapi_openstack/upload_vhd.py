@@ -22,22 +22,27 @@ class ValidatingCommand(object):
 class ConnectToKeystone(ValidatingCommand):
     schema = ConnectRequest
 
-    def get_keystone_client(self, ksclient=None):
-        return ksclient.Client(
+    def __call__(self, ksclient=None):
+        return KSClient(ksclient.Client(
             username=self.args['user'],
             password=self.args['password'],
             insecure=False,
             tenant_name=self.args['tenant_name'],
             auth_url=self.args['auth_url'],
-            tenant_id=None)
+            tenant_id=None))
+
+
+class KSClient(object):
+    def __init__(self, client):
+        self.client = client
 
     @property
     def auth_token(self):
-        return self.get_keystone_client().auth_token
+        return self.client.auth_token
 
     def _get_endpoint_urlobj(self):
         return urlparse(
-            self.get_keystone_client().service_catalog.url_for(
+            self.client.service_catalog.url_for(
                 service_type="image", endpoint_type="publicURL"))
 
     @property
