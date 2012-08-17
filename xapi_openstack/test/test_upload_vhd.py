@@ -6,7 +6,7 @@ from xapi_openstack.upload_vhd import (
 )
 
 
-class InstructXapiToUploadTestCase(unittest.TestCase):
+class UploadVHDTestCase(unittest.TestCase):
     def test_get_xapi_session(self):
         session = mock.Mock()
         xapi = mock.Mock()
