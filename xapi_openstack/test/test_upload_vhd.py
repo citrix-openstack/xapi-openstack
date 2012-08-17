@@ -1,7 +1,9 @@
 import unittest
 import mock
 
-from xapi_openstack.upload_vhd import UploadVHD, to_host_port
+from xapi_openstack.upload_vhd import (
+    UploadVHD, to_host_port, ConnectToKeystone
+)
 
 
 class UploadVhdValidationTestCase(unittest.TestCase):
@@ -27,29 +29,6 @@ class UploadVhdValidationTestCase(unittest.TestCase):
         self.assertFalse(upload.valid)
 
 
-class UploadVhdKeystoneCallsTestCase(unittest.TestCase):
-    def test_keystone_client_created(self):
-        ksclient = mock.Mock()
-        c = mock.call
-
-        upload = UploadVHD(
-            username="user",
-            password="password",
-            tenant_name="demo",
-            auth_url="http://127.0.0.1:5000/v2.0")
-
-        client = upload.get_keystone_client(ksclient=ksclient)
-
-        self.assertEquals(
-            [c.Client(
-                username="user", password="password",
-                tenant_id=None, tenant_name="demo",
-                auth_url="http://127.0.0.1:5000/v2.0",
-                insecure=False)],
-            ksclient.mock_calls
-        )
-
-
 class InstructXapiToUploadTestCase(unittest.TestCase):
     def test_get_xapi_session(self):
         session = mock.Mock()
@@ -57,13 +36,16 @@ class InstructXapiToUploadTestCase(unittest.TestCase):
         xapi.Session.return_value = session
         c = mock.call
 
-        upload = UploadVHD(xapiurl="someurl", xapiuser='xapiuser', xapipass='xapipass')
+        upload = UploadVHD(
+            xapiurl="someurl", xapiuser='xapiuser',
+            xapipass='xapipass')
 
         result = upload.get_xapi_session(xapi=xapi)
 
-        self.assertEquals([
-            c.Session("someurl"),
-            c.Session().login_with_password('xapiuser', 'xapipass')
+        self.assertEquals(
+            [
+                c.Session("someurl"),
+                c.Session().login_with_password('xapiuser', 'xapipass')
             ],
             xapi.mock_calls)
 
@@ -80,32 +62,55 @@ class InstructXapiToUploadTestCase(unittest.TestCase):
 
         self.assertEquals(myhost, result)
 
+
+class ConnectToKeystoneTestCase(unittest.TestCase):
+    def test_keystone_client_created(self):
+        ksclient = mock.Mock()
+        c = mock.call
+
+        connector = ConnectToKeystone(
+            username="user",
+            password="password",
+            tenant_name="demo",
+            auth_url="http://127.0.0.1:5000/v2.0")
+
+        client = connector.get_keystone_client(ksclient=ksclient)
+
+        self.assertEquals(
+            [c.Client(
+                username="user", password="password",
+                tenant_id=None, tenant_name="demo",
+                auth_url="http://127.0.0.1:5000/v2.0",
+                insecure=False)],
+            ksclient.mock_calls
+        )
+
     def test_auth_token(self):
         atoken = object()
         client = mock.Mock()
         client.auth_token = atoken
 
-        class MockUpload(UploadVHD):
+        class MockConnector(ConnectToKeystone):
             def get_keystone_client(self, ksclient=None):
                 return client
 
-        upload = MockUpload()
+        connector = MockConnector()
 
-        self.assertEquals(atoken, upload.auth_token)
+        self.assertEquals(atoken, connector.auth_token)
 
     def test_glance_host_port(self):
         atoken = object()
         client = mock.Mock()
         client.service_catalog.url_for.return_value = "http://127.0.0.1:9292"
 
-        class MockUpload(UploadVHD):
+        class MockConnector(ConnectToKeystone):
             def get_keystone_client(self, ksclient=None):
                 return client
 
-        upload = MockUpload()
+        connector = MockConnector()
 
-        self.assertEquals("127.0.0.1", upload.glance_host)
-        self.assertEquals(9292, upload.glance_port)
+        self.assertEquals("127.0.0.1", connector.glance_host)
+        self.assertEquals(9292, connector.glance_port)
 
 
 class UtilsTestCase(unittest.TestCase):
