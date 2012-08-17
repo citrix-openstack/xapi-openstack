@@ -2,7 +2,7 @@ import unittest
 import mock
 
 from xapi_openstack.upload_vhd import (
-    UploadVHD, to_host_port, ConnectToKeystone, Invalid
+    UploadVHD, ConnectToKeystone, Invalid
 )
 
 

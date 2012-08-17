@@ -2,11 +2,6 @@ from formencode import validators, Schema, Invalid
 from urlparse import urlparse
 
 
-def to_host_port(url):
-    o = urlparse(url)
-    return o.hostname, o.port
-
-
 class ConnectRequest(Schema):
     username = validators.String(not_empty=True)
     password = validators.String(not_empty=True)
