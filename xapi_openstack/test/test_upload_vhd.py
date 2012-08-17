@@ -2,26 +2,26 @@ import unittest
 import mock
 
 from xapi_openstack.upload_vhd import (
-    UploadVHD, ConnectToKeystone, Invalid
+    GetXAPIHost, ConnectToKeystone, Invalid
 )
 
 
-class UploadVHDTestCase(unittest.TestCase):
+class GetXAPIHostTestCase(unittest.TestCase):
     def test_valid_parameter_set(self):
-        upload_vhd = UploadVHD(
+        get_host = GetXAPIHost(
             xapiurl='xapiurl', user='xapiuser', password='xapipass')
 
         try:
-            upload_vhd.validate()
+            get_host.validate()
         except Invalid:
             raise AssertionError()
 
     def test_missing_a_parameter(self):
-        upload_vhd = UploadVHD(
+        get_host = GetXAPIHost(
             user='xapiuser', password='xapipass')
 
         with self.assertRaises(Invalid):
-            upload_vhd.validate()
+            get_host.validate()
 
     def test_get_xapi_session(self):
         session = mock.Mock()
@@ -29,11 +29,11 @@ class UploadVHDTestCase(unittest.TestCase):
         xapi.Session.return_value = session
         c = mock.call
 
-        upload = UploadVHD(
+        get_host = GetXAPIHost(
             xapiurl="someurl", user='xapiuser',
             password='xapipass')
 
-        result = upload.get_xapi_session(xapi=xapi)
+        result = get_host.get_xapi_session(xapi=xapi)
 
         self.assertEquals(
             [
@@ -50,8 +50,8 @@ class UploadVHDTestCase(unittest.TestCase):
         session = mock.Mock()
         session.xenapi.host.get_all.return_value = [myhost]
 
-        upload = UploadVHD()
-        result = upload.get_single_host(session=session)
+        get_host = GetXAPIHost()
+        result = get_host.get_single_host(session=session)
 
         self.assertEquals(myhost, result)
 

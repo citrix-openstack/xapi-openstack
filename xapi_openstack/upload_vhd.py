@@ -49,14 +49,14 @@ class ConnectToKeystone(ValidatingCommand):
         return self._get_endpoint_urlobj().port
 
 
-class UploadVHDSchema(Schema):
+class GetXAPIHostSchema(Schema):
     xapiurl = validators.String(not_empty=True)
     user = validators.String(not_empty=True)
     password = validators.String(not_empty=True)
 
 
-class UploadVHD(ValidatingCommand):
-    schema = UploadVHDSchema
+class GetXAPIHost(ValidatingCommand):
+    schema = GetXAPIHostSchema
 
     def __init__(self, **args):
         self.args = args
