@@ -164,7 +164,6 @@ def main(args, writeline=None):
         sys.stderr.write("Missing options, try %s --help\n" % args[0])
         sys.exit(1)
     if options.verbose:
-        print 'lll'
         logger.setLevel(logging.DEBUG)
 
     session = get_session(options)
