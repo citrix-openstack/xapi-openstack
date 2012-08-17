@@ -1,4 +1,4 @@
-from formencode import validators, Schema, Invalid, variabledecode
+from formencode import validators, Schema, Invalid
 from urlparse import urlparse
 
 
