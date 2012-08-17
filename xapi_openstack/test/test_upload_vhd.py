@@ -9,7 +9,7 @@ from xapi_openstack.upload_vhd import (
 class GetXAPIHostTestCase(unittest.TestCase):
     def test_valid_parameter_set(self):
         get_host = GetXAPIHost(dict(
-            xapiurl='xapiurl', user='xapiuser', password='xapipass'))
+            url='xapiurl', user='xapiuser', password='xapipass'))
 
         try:
             get_host.validate()
@@ -30,7 +30,7 @@ class GetXAPIHostTestCase(unittest.TestCase):
         c = mock.call
 
         get_host = GetXAPIHost(dict(
-            xapiurl="someurl", user='xapiuser',
+            url="someurl", user='xapiuser',
             password='xapipass'))
 
         result = get_host.get_xapi_session(xapi=xapi)
@@ -131,7 +131,7 @@ class UploadVHDTestCase(unittest.TestCase):
     def test_with_valid_parameters(self):
         upload = UploadVHD({
             'xapi': {
-                'xapiurl': 'xapiurl',
+                'url': 'xapiurl',
                 'user': 'xapiuser',
                 'password': 'xapipass'
             }

@@ -50,7 +50,7 @@ class ConnectToKeystone(ValidatingCommand):
 
 
 class GetXAPIHostSchema(Schema):
-    xapiurl = validators.String(not_empty=True)
+    url = validators.String(not_empty=True)
     user = validators.String(not_empty=True)
     password = validators.String(not_empty=True)
 
@@ -59,7 +59,7 @@ class GetXAPIHost(ValidatingCommand):
     schema = GetXAPIHostSchema
 
     def get_xapi_session(self, xapi=None):
-        session = xapi.Session(self.args['xapiurl'])
+        session = xapi.Session(self.args['url'])
         session.login_with_password(
             self.args['user'],
             self.args['password'])
