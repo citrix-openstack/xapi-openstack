@@ -15,14 +15,15 @@ class ConnectRequest(Schema):
 
 
 class ConnectToKeystone(object):
+    schema = ConnectRequest
+
     def __init__(self, **args):
         self.args = args
 
     def validate(self):
         self.valid = False
-        schema = ConnectRequest()
         try:
-            schema.to_python(self.args, None)
+            self.schema().to_python(self.args, None)
             self.valid = True
         except Invalid:
             pass
