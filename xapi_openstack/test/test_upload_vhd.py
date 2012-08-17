@@ -128,8 +128,7 @@ class ConnectToKeystoneTestCase(unittest.TestCase):
 
 
 class UploadVHDTestCase(unittest.TestCase):
-    def test_with_valid_parameters(self):
-        upload = UploadVHD({
+    ARGS = {
             'xapi': {
                 'url': 'xapiurl',
                 'user': 'xapiuser',
@@ -143,8 +142,10 @@ class UploadVHDTestCase(unittest.TestCase):
             },
             'vhd_uuid': 'vhduuid',
             'image_uuid': 'imageuuid'
-        })
+        }
 
+    def test_with_valid_parameters(self):
+        upload = UploadVHD(self.ARGS)
         upload.validate()
 
     def test_with_invalid_parameters(self):
