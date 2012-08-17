@@ -129,20 +129,20 @@ class ConnectToKeystoneTestCase(unittest.TestCase):
 
 class UploadVHDTestCase(unittest.TestCase):
     ARGS = {
-            'xapi': {
-                'url': 'xapiurl',
-                'user': 'xapiuser',
-                'password': 'xapipass'
-            },
-            'ks': {
-                'auth_url': 'ksurl',
-                'password': 'kspass',
-                'tenant_name': 'tn',
-                'user': 'ksusr'
-            },
-            'vhd_uuid': 'vhduuid',
-            'image_uuid': 'imageuuid'
-        }
+        'xapi': {
+            'url': 'xapiurl',
+            'user': 'xapiuser',
+            'password': 'xapipass'
+        },
+        'ks': {
+            'auth_url': 'ksurl',
+            'password': 'kspass',
+            'tenant_name': 'tn',
+            'user': 'ksusr'
+        },
+        'vhd_uuid': 'vhduuid',
+        'image_uuid': 'imageuuid'
+    }
 
     def test_with_valid_parameters(self):
         upload = UploadVHD(self.ARGS)
