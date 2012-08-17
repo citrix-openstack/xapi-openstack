@@ -9,20 +9,20 @@ from xapi_openstack.upload_vhd import (
 
 class ConnectToXAPITestCase(unittest.TestCase):
     def test_valid_parameter_set(self):
-        get_host = ConnectToXAPI(dict(
+        connect = ConnectToXAPI(dict(
             url='xapiurl', user='xapiuser', password='xapipass'))
 
         try:
-            get_host.validate()
+            connect.validate()
         except Invalid:
             raise AssertionError()
 
     def test_missing_a_parameter(self):
-        get_host = ConnectToXAPI(dict(
+        connect = ConnectToXAPI(dict(
             user='xapiuser', password='xapipass'))
 
         with self.assertRaises(Invalid):
-            get_host.validate()
+            connect.validate()
 
     def test_get_xapi_session(self):
         session = mock.Mock()
@@ -30,11 +30,11 @@ class ConnectToXAPITestCase(unittest.TestCase):
         xapi.Session.return_value = session
         c = mock.call
 
-        get_host = ConnectToXAPI(dict(
+        connect = ConnectToXAPI(dict(
             url="someurl", user='xapiuser',
             password='xapipass'))
 
-        result = get_host(xapi=xapi)
+        result = connect(xapi=xapi)
 
         self.assertEquals(
             [
