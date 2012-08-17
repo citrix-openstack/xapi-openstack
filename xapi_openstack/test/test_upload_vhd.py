@@ -2,7 +2,7 @@ import unittest
 import mock
 
 from xapi_openstack.upload_vhd import (
-    GetXAPIHost, ConnectToKeystone, Invalid
+    GetXAPIHost, ConnectToKeystone, Invalid, UploadVHD
 )
 
 
@@ -125,3 +125,11 @@ class ConnectToKeystoneTestCase(unittest.TestCase):
 
         self.assertEquals("127.0.0.1", connector.glance_host)
         self.assertEquals(9292, connector.glance_port)
+
+
+class UploadVHDTestCase(unittest.TestCase):
+    def test_parameters(self):
+        upload = UploadVHD(
+        )
+
+        upload.validate()

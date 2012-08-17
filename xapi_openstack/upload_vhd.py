@@ -12,15 +12,15 @@ class ConnectRequest(Schema):
 class ValidatingCommand(object):
     schema = None
 
+    def __init__(self, **args):
+        self.args = args
+
     def validate(self):
         self.schema().to_python(self.args, None)
 
 
 class ConnectToKeystone(ValidatingCommand):
     schema = ConnectRequest
-
-    def __init__(self, **args):
-        self.args = args
 
     def get_keystone_client(self, ksclient=None):
         return ksclient.Client(
@@ -58,9 +58,6 @@ class GetXAPIHostSchema(Schema):
 class GetXAPIHost(ValidatingCommand):
     schema = GetXAPIHostSchema
 
-    def __init__(self, **args):
-        self.args = args
-
     def get_xapi_session(self, xapi=None):
         session = xapi.Session(self.args['xapiurl'])
         session.login_with_password(
@@ -71,3 +68,11 @@ class GetXAPIHost(ValidatingCommand):
     def get_single_host(self, session=None):
         host, = session.xenapi.host.get_all()
         return host
+
+
+class UploadVHDSchema(Schema):
+    pass
+
+
+class UploadVHD(ValidatingCommand):
+    schema = UploadVHDSchema
