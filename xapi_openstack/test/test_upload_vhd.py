@@ -8,8 +8,8 @@ from xapi_openstack.upload_vhd import (
 
 class GetXAPIHostTestCase(unittest.TestCase):
     def test_valid_parameter_set(self):
-        get_host = GetXAPIHost(
-            xapiurl='xapiurl', user='xapiuser', password='xapipass')
+        get_host = GetXAPIHost(dict(
+            xapiurl='xapiurl', user='xapiuser', password='xapipass'))
 
         try:
             get_host.validate()
@@ -17,8 +17,8 @@ class GetXAPIHostTestCase(unittest.TestCase):
             raise AssertionError()
 
     def test_missing_a_parameter(self):
-        get_host = GetXAPIHost(
-            user='xapiuser', password='xapipass')
+        get_host = GetXAPIHost(dict(
+            user='xapiuser', password='xapipass'))
 
         with self.assertRaises(Invalid):
             get_host.validate()
@@ -29,9 +29,9 @@ class GetXAPIHostTestCase(unittest.TestCase):
         xapi.Session.return_value = session
         c = mock.call
 
-        get_host = GetXAPIHost(
+        get_host = GetXAPIHost(dict(
             xapiurl="someurl", user='xapiuser',
-            password='xapipass')
+            password='xapipass'))
 
         result = get_host.get_xapi_session(xapi=xapi)
 
@@ -59,11 +59,11 @@ class GetXAPIHostTestCase(unittest.TestCase):
 class ConnectToKeystoneTestCase(unittest.TestCase):
 
     def test_all_parameters_given_is_valid(self):
-        connect = ConnectToKeystone(
+        connect = ConnectToKeystone(dict(
             username="user",
             password="password",
             tenant_name="demo",
-            auth_url="http://127.0.0.1:5000/v2.0")
+            auth_url="http://127.0.0.1:5000/v2.0"))
 
         try:
             connect.validate()
@@ -71,10 +71,10 @@ class ConnectToKeystoneTestCase(unittest.TestCase):
             raise AssertionError()
 
     def test_missing_parameter(self):
-        connect = ConnectToKeystone(
+        connect = ConnectToKeystone(dict(
             password="password",
             tenant_name="demo",
-            auth_url="http://127.0.0.1:5000/v2.0")
+            auth_url="http://127.0.0.1:5000/v2.0"))
 
         self.assertRaises(Invalid, connect.validate)
 
@@ -82,11 +82,11 @@ class ConnectToKeystoneTestCase(unittest.TestCase):
         ksclient = mock.Mock()
         c = mock.call
 
-        connector = ConnectToKeystone(
+        connector = ConnectToKeystone(dict(
             username="user",
             password="password",
             tenant_name="demo",
-            auth_url="http://127.0.0.1:5000/v2.0")
+            auth_url="http://127.0.0.1:5000/v2.0"))
 
         client = connector.get_keystone_client(ksclient=ksclient)
 
@@ -128,8 +128,19 @@ class ConnectToKeystoneTestCase(unittest.TestCase):
 
 
 class UploadVHDTestCase(unittest.TestCase):
-    def test_parameters(self):
-        upload = UploadVHD(
-        )
+    def test_with_valid_parameters(self):
+        upload = UploadVHD({
+            'xapi': {
+                'xapiurl': 'xapiurl',
+                'user': 'xapiuser',
+                'password': 'xapipass'
+            }
+        })
 
         upload.validate()
+
+    def test_with_invalid_parameters(self):
+        upload = UploadVHD()
+
+        with self.assertRaises(Invalid):
+            upload.validate()

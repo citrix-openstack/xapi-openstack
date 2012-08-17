@@ -1,4 +1,4 @@
-from formencode import validators, Schema, Invalid
+from formencode import validators, Schema, Invalid, variabledecode
 from urlparse import urlparse
 
 
@@ -12,8 +12,8 @@ class ConnectRequest(Schema):
 class ValidatingCommand(object):
     schema = None
 
-    def __init__(self, **args):
-        self.args = args
+    def __init__(self, args=None):
+        self.args = args or dict()
 
     def validate(self):
         self.schema().to_python(self.args, None)
@@ -71,7 +71,7 @@ class GetXAPIHost(ValidatingCommand):
 
 
 class UploadVHDSchema(Schema):
-    pass
+    xapi = GetXAPIHostSchema()
 
 
 class UploadVHD(ValidatingCommand):
