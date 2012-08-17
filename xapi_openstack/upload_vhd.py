@@ -51,8 +51,8 @@ class ConnectToKeystone(ValidatingCommand):
 
 class UploadVHDSchema(Schema):
     xapiurl = validators.String(not_empty=True)
-    xapiuser = validators.String(not_empty=True)
-    xapipass = validators.String(not_empty=True)
+    user = validators.String(not_empty=True)
+    password = validators.String(not_empty=True)
 
 
 class UploadVHD(ValidatingCommand):
@@ -64,8 +64,8 @@ class UploadVHD(ValidatingCommand):
     def get_xapi_session(self, xapi=None):
         session = xapi.Session(self.args['xapiurl'])
         session.login_with_password(
-            self.args['xapiuser'],
-            self.args['xapipass'])
+            self.args['user'],
+            self.args['password'])
         return session
 
     def get_single_host(self, session=None):
