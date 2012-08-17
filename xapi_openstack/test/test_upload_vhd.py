@@ -80,8 +80,35 @@ class InstructXapiToUploadTestCase(unittest.TestCase):
 
         self.assertEquals(myhost, result)
 
+    def test_auth_token(self):
+        atoken = object()
+        client = mock.Mock()
+        client.auth_token = atoken
+
+        class MockUpload(UploadVHD):
+            def get_keystone_client(self, ksclient=None):
+                return client
+
+        upload = MockUpload()
+
+        self.assertEquals(atoken, upload.auth_token)
+
+    def test_glance_host_port(self):
+        atoken = object()
+        client = mock.Mock()
+        client.service_catalog.url_for.return_value = "http://127.0.0.1:9292"
+
+        class MockUpload(UploadVHD):
+            def get_keystone_client(self, ksclient=None):
+                return client
+
+        upload = MockUpload()
+
+        self.assertEquals("127.0.0.1", upload.glance_host)
+        self.assertEquals(9292, upload.glance_port)
+
+
 class UtilsTestCase(unittest.TestCase):
     def test_to_host_port(self):
         host, port = to_host_port('http://127.0.0.1:9292')
         self.assertEquals("127.0.0.1", host)
-
