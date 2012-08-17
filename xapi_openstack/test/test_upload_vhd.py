@@ -2,13 +2,14 @@ import unittest
 import mock
 
 from xapi_openstack.upload_vhd import (
-    GetXAPIHost, ConnectToKeystone, Invalid, UploadVHD, KSClient
+    ConnectToXAPI, ConnectToKeystone, Invalid, UploadVHD, KSClient,
+    XAPISession
 )
 
 
-class GetXAPIHostTestCase(unittest.TestCase):
+class ConnectToXAPITestCase(unittest.TestCase):
     def test_valid_parameter_set(self):
-        get_host = GetXAPIHost(dict(
+        get_host = ConnectToXAPI(dict(
             url='xapiurl', user='xapiuser', password='xapipass'))
 
         try:
@@ -17,7 +18,7 @@ class GetXAPIHostTestCase(unittest.TestCase):
             raise AssertionError()
 
     def test_missing_a_parameter(self):
-        get_host = GetXAPIHost(dict(
+        get_host = ConnectToXAPI(dict(
             user='xapiuser', password='xapipass'))
 
         with self.assertRaises(Invalid):
@@ -29,11 +30,11 @@ class GetXAPIHostTestCase(unittest.TestCase):
         xapi.Session.return_value = session
         c = mock.call
 
-        get_host = GetXAPIHost(dict(
+        get_host = ConnectToXAPI(dict(
             url="someurl", user='xapiuser',
             password='xapipass'))
 
-        result = get_host.get_xapi_session(xapi=xapi)
+        result = get_host(xapi=xapi)
 
         self.assertEquals(
             [
@@ -43,15 +44,17 @@ class GetXAPIHostTestCase(unittest.TestCase):
             xapi.mock_calls)
 
         self.assertEquals(
-            session, result)
+            session, result.session)
 
+
+class XAPISessionTestCase(unittest.TestCase):
     def test_get_single_host(self):
         myhost = object()
         session = mock.Mock()
         session.xenapi.host.get_all.return_value = [myhost]
 
-        get_host = GetXAPIHost()
-        result = get_host.get_single_host(session=session)
+        xapi_session = XAPISession(session)
+        result = xapi_session.get_single_host(session=session)
 
         self.assertEquals(myhost, result)
 
