@@ -6,29 +6,6 @@ from xapi_openstack.upload_vhd import (
 )
 
 
-class UploadVhdValidationTestCase(unittest.TestCase):
-    def test_all_parameters_given_is_valid(self):
-        upload = UploadVHD(
-            username="user",
-            password="password",
-            tenant_name="demo",
-            auth_url="http://127.0.0.1:5000/v2.0")
-
-        upload.validate()
-
-        self.assertTrue(upload.valid)
-
-    def test_missing_parameter(self):
-        upload = UploadVHD(
-            password="password",
-            tenant_name="demo",
-            auth_url="http://127.0.0.1:5000/v2.0")
-
-        upload.validate()
-
-        self.assertFalse(upload.valid)
-
-
 class InstructXapiToUploadTestCase(unittest.TestCase):
     def test_get_xapi_session(self):
         session = mock.Mock()
@@ -64,6 +41,28 @@ class InstructXapiToUploadTestCase(unittest.TestCase):
 
 
 class ConnectToKeystoneTestCase(unittest.TestCase):
+
+    def test_all_parameters_given_is_valid(self):
+        connect = ConnectToKeystone(
+            username="user",
+            password="password",
+            tenant_name="demo",
+            auth_url="http://127.0.0.1:5000/v2.0")
+
+        connect.validate()
+
+        self.assertTrue(connect.valid)
+
+    def test_missing_parameter(self):
+        connect = ConnectToKeystone(
+            password="password",
+            tenant_name="demo",
+            auth_url="http://127.0.0.1:5000/v2.0")
+
+        connect.validate()
+
+        self.assertFalse(connect.valid)
+
     def test_keystone_client_created(self):
         ksclient = mock.Mock()
         c = mock.call
