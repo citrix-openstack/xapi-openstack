@@ -72,6 +72,7 @@ class GetXAPIHost(ValidatingCommand):
 
 class UploadVHDSchema(Schema):
     xapi = GetXAPIHostSchema()
+    ks = ConnectRequest()
 
 
 class UploadVHD(ValidatingCommand):

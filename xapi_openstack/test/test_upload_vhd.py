@@ -134,6 +134,12 @@ class UploadVHDTestCase(unittest.TestCase):
                 'url': 'xapiurl',
                 'user': 'xapiuser',
                 'password': 'xapipass'
+            },
+            'ks': {
+                'auth_url': 'ksurl',
+                'password': 'kspass',
+                'tenant_name': 'tn',
+                'user': 'ksusr'
             }
         })
 
