@@ -3,7 +3,7 @@ from urlparse import urlparse
 
 
 class ConnectRequest(Schema):
-    username = validators.String(not_empty=True)
+    user = validators.String(not_empty=True)
     password = validators.String(not_empty=True)
     tenant_name = validators.String(not_empty=True)
     auth_url = validators.String(not_empty=True)
@@ -24,7 +24,7 @@ class ConnectToKeystone(ValidatingCommand):
 
     def get_keystone_client(self, ksclient=None):
         return ksclient.Client(
-            username=self.args['username'],
+            username=self.args['user'],
             password=self.args['password'],
             insecure=False,
             tenant_name=self.args['tenant_name'],

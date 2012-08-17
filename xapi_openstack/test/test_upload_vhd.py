@@ -60,7 +60,7 @@ class ConnectToKeystoneTestCase(unittest.TestCase):
 
     def test_all_parameters_given_is_valid(self):
         connect = ConnectToKeystone(dict(
-            username="user",
+            user="user",
             password="password",
             tenant_name="demo",
             auth_url="http://127.0.0.1:5000/v2.0"))
@@ -83,7 +83,7 @@ class ConnectToKeystoneTestCase(unittest.TestCase):
         c = mock.call
 
         connector = ConnectToKeystone(dict(
-            username="user",
+            user="user",
             password="password",
             tenant_name="demo",
             auth_url="http://127.0.0.1:5000/v2.0"))
