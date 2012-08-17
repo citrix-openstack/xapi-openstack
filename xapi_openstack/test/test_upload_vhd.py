@@ -82,13 +82,13 @@ class ConnectToKeystoneTestCase(unittest.TestCase):
         ksclient = mock.Mock()
         c = mock.call
 
-        connector = ConnectToKeystone(dict(
+        connect = ConnectToKeystone(dict(
             user="user",
             password="password",
             tenant_name="demo",
             auth_url="http://127.0.0.1:5000/v2.0"))
 
-        client = connector.get_keystone_client(ksclient=ksclient)
+        client = connect.get_keystone_client(ksclient=ksclient)
 
         self.assertEquals(
             [c.Client(
@@ -108,9 +108,9 @@ class ConnectToKeystoneTestCase(unittest.TestCase):
             def get_keystone_client(self, ksclient=None):
                 return client
 
-        connector = MockConnector()
+        connect = MockConnector()
 
-        self.assertEquals(atoken, connector.auth_token)
+        self.assertEquals(atoken, connect.auth_token)
 
     def test_glance_host_port(self):
         atoken = object()
@@ -121,10 +121,10 @@ class ConnectToKeystoneTestCase(unittest.TestCase):
             def get_keystone_client(self, ksclient=None):
                 return client
 
-        connector = MockConnector()
+        connect = MockConnector()
 
-        self.assertEquals("127.0.0.1", connector.glance_host)
-        self.assertEquals(9292, connector.glance_port)
+        self.assertEquals("127.0.0.1", connect.glance_host)
+        self.assertEquals(9292, connect.glance_port)
 
 
 class UploadVHDTestCase(unittest.TestCase):
