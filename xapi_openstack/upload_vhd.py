@@ -73,6 +73,8 @@ class GetXAPIHost(ValidatingCommand):
 class UploadVHDSchema(Schema):
     xapi = GetXAPIHostSchema()
     ks = ConnectRequest()
+    vhd_uuid = validators.String(not_empty=True)
+    image_uuid = validators.String(not_empty=True)
 
 
 class UploadVHD(ValidatingCommand):

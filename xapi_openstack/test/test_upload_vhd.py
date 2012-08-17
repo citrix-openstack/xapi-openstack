@@ -140,7 +140,9 @@ class UploadVHDTestCase(unittest.TestCase):
                 'password': 'kspass',
                 'tenant_name': 'tn',
                 'user': 'ksusr'
-            }
+            },
+            'vhd_uuid': 'vhduuid',
+            'image_uuid': 'imageuuid'
         })
 
         upload.validate()
