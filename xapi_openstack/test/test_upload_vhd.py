@@ -2,7 +2,7 @@ import unittest
 import mock
 
 from xapi_openstack.upload_vhd import (
-    UploadVHD, to_host_port, ConnectToKeystone
+    UploadVHD, to_host_port, ConnectToKeystone, Invalid
 )
 
 
@@ -49,9 +49,10 @@ class ConnectToKeystoneTestCase(unittest.TestCase):
             tenant_name="demo",
             auth_url="http://127.0.0.1:5000/v2.0")
 
-        connect.validate()
-
-        self.assertTrue(connect.valid)
+        try:
+            connect.validate()
+        except Invalid:
+            raise AssertionError()
 
     def test_missing_parameter(self):
         connect = ConnectToKeystone(
@@ -59,9 +60,7 @@ class ConnectToKeystoneTestCase(unittest.TestCase):
             tenant_name="demo",
             auth_url="http://127.0.0.1:5000/v2.0")
 
-        connect.validate()
-
-        self.assertFalse(connect.valid)
+        self.assertRaises(Invalid, connect.validate)
 
     def test_keystone_client_created(self):
         ksclient = mock.Mock()

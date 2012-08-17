@@ -21,12 +21,7 @@ class ConnectToKeystone(object):
         self.args = args
 
     def validate(self):
-        self.valid = False
-        try:
-            self.schema().to_python(self.args, None)
-            self.valid = True
-        except Invalid:
-            pass
+        self.schema().to_python(self.args, None)
 
     def get_keystone_client(self, ksclient=None):
         return ksclient.Client(
