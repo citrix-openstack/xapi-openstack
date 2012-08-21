@@ -1,3 +1,4 @@
+import logging
 from formencode import validators, Schema, Invalid, variabledecode
 
 from xapi_openstack.services import (
@@ -7,6 +8,11 @@ from xapi_openstack.services import (
 from xapi_openstack.models import KSClient, XAPISession
 
 import argparse
+
+
+logging.basicConfig(level=logging.DEBUG)
+
+logger = logging.getLogger(__name__)
 
 
 class ConnectToXAPISchema(Schema):
@@ -41,7 +47,11 @@ class UploadVHD(ValidatingCommand):
         connect_to_xapi = ConnectToXAPI(self.args['xapi'])
 
         import XenAPI
-        connect_to_xapi(xapi=XenAPI)
+        session = connect_to_xapi(xapi=XenAPI)
+
+        sr_uuid = session.get_sr_uuid_by_vdi(self.args['vhd_uuid'])
+        sr_path = '/var/run/sr-mount/{0}'.format(sr_uuid)
+        logger.info('assuming sr is at: %s', sr_path)
 
 
 def collect_args(argv):
@@ -70,4 +80,5 @@ def collect_args(argv):
 def main(argv):
     args = collect_args(argv[1:])
     upload = UploadVHD(args)
+    logger.setLevel(logging.DEBUG)
     upload()
