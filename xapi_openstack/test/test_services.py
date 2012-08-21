@@ -62,7 +62,7 @@ class FakeXenAPIModule(object):
         return result
 
 
-class FakedTestCase(unittest.TestCase):
+class MockedXapiTestCase(unittest.TestCase):
     DATA = {}
 
     def setUp(self):

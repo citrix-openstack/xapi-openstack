@@ -2,7 +2,7 @@ import textwrap
 import unittest
 import xapi_openstack.list_vhds as lvhd
 
-from xapi_openstack.test.test_services import FakedTestCase
+from xapi_openstack.test.test_services import MockedXapiTestCase
 
 
 class ParseOptionsTestCase(unittest.TestCase):
@@ -20,7 +20,7 @@ class Fake(object):
     pass
 
 
-class FunctionalTestCase(FakedTestCase):
+class FunctionalTestCase(MockedXapiTestCase):
     DATA = {
         'VM': {
             'm1': {
