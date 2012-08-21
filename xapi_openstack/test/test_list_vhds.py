@@ -2,6 +2,9 @@ import textwrap
 import unittest
 import xapi_openstack.list_vhds as lvhd
 
+from xapi_openstack import models
+from xapi_openstack import services
+
 
 class ParseOptionsTestCase(unittest.TestCase):
     def test_options_fail(self):
@@ -79,11 +82,11 @@ class FakedTestCase(unittest.TestCase):
 
     def setUp(self):
         self.xapi = FakeXenAPIModule(data=self.DATA)
-        self.stored_xenapi = lvhd.xenapi
-        lvhd.xenapi = self.xapi
+        self.stored_xenapi = services.xenapi
+        services.xenapi = self.xapi
 
     def tearDown(self):
-        lvhd.xenapi = self.stored_xenapi
+        services.xenapi = self.stored_xenapi
 
 
 class FunctionalTestCase(FakedTestCase):
@@ -154,7 +157,7 @@ class GetVDIuuidTestCase(unittest.TestCase):
                 'vdi1': {}
             }
         }
-        vdi = lvhd.get_vdi(FakeXenAPIModule(data).Session(), 'vdi1')
+        vdi = services.get_vdi(FakeXenAPIModule(data).Session(), 'vdi1')
         self.assertTrue(vdi is not None)
 
 
@@ -190,7 +193,7 @@ class ListMachinesTestCase(unittest.TestCase):
                 }
             }
         }
-        machine_list = lvhd.machines(FakeXenAPIModule(data).Session())
+        machine_list = services.machines(FakeXenAPIModule(data).Session())
         self.assertIn('m1', machine_list)
 
 
@@ -222,18 +225,18 @@ class MachineTestCase(unittest.TestCase):
                 }
             },
         }
-        m1 = lvhd.machines(FakeXenAPIModule(data).Session())['m1']
+        m1 = services.machines(FakeXenAPIModule(data).Session())['m1']
         self.assertEquals(2, len(m1.vbds))
         self.assertEquals('vdi1', m1.vbds[0].vdi_ref)
 
 
 class MachineUnitTest(unittest.TestCase):
     def test_is_exportable(self):
-        m = lvhd.Machine(dict())
+        m = models.Machine(dict())
         self.assertFalse(m.exportable)
 
     def test_disk_vdi_is_exportable(self):
-        m = lvhd.Machine(dict())
+        m = models.Machine(dict())
 
         vbd = Fake()
         vbd.is_vdi = True
@@ -243,7 +246,7 @@ class MachineUnitTest(unittest.TestCase):
         self.assertTrue(m.exportable)
 
     def test_non_disk_vdi_ignored(self):
-        m = lvhd.Machine(dict())
+        m = models.Machine(dict())
 
         vbd = Fake()
         vbd.is_vdi = True
@@ -253,7 +256,7 @@ class MachineUnitTest(unittest.TestCase):
         self.assertFalse(m.exportable)
 
     def test_machine_with_no_vdi_is_not_exportable(self):
-        m = lvhd.Machine(dict())
+        m = models.Machine(dict())
 
         non_vdi = Fake()
         non_vdi.is_vdi = False
@@ -262,7 +265,7 @@ class MachineUnitTest(unittest.TestCase):
         self.assertFalse(m.exportable)
 
     def test_machine_name(self):
-        m = lvhd.Machine({
+        m = models.Machine({
             'name_label': 'somemachine'
         })
 
@@ -271,32 +274,32 @@ class MachineUnitTest(unittest.TestCase):
 
 class VBDTestCase(unittest.TestCase):
     def test_is_vdi(self):
-        vbd = lvhd.VBD(dict())
+        vbd = models.VBD(dict())
 
         self.assertFalse(vbd.is_vdi)
         self.assertIsNone(vbd.vdi_ref)
 
     def test_is_vdi_true(self):
-        vbd = lvhd.VBD({
+        vbd = models.VBD({
             'VDI': 'somevdiref'
         })
 
         self.assertTrue(vbd.is_vdi)
 
     def test_empty_is_not_a_disk(self):
-        vbd = lvhd.VBD(dict())
+        vbd = models.VBD(dict())
 
         self.assertFalse(vbd.is_disk)
 
     def test_Disk_type_is_a_disk(self):
-        vbd = lvhd.VBD({
+        vbd = models.VBD({
             'type': 'Disk'
         })
 
         self.assertTrue(vbd.is_disk)
 
     def test_vdi(self):
-        vbd = lvhd.VBD({
+        vbd = models.VBD({
             'VDI': 'vdiref'
         })
 
@@ -305,11 +308,11 @@ class VBDTestCase(unittest.TestCase):
 
 class VDITestCase(unittest.TestCase):
     def test_uuid(self):
-        vdi = lvhd.VDI(dict())
+        vdi = models.VDI(dict())
         self.assertIsNone(vdi.uuid)
 
     def test_uuid_value(self):
-        vdi = lvhd.VDI({
+        vdi = models.VDI({
             'uuid': 'someuuid'
         })
         self.assertEquals('someuuid', vdi.uuid)
