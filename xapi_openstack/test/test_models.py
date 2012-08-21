@@ -1,9 +1,7 @@
 import unittest
+import mock
+
 from xapi_openstack import models
-
-
-class Fake(object):
-    pass
 
 
 class MachineUnitTest(unittest.TestCase):
@@ -14,7 +12,7 @@ class MachineUnitTest(unittest.TestCase):
     def test_disk_vdi_is_exportable(self):
         m = models.Machine(dict())
 
-        vbd = Fake()
+        vbd = mock.Mock()
         vbd.is_vdi = True
         vbd.is_disk = True
 
@@ -24,7 +22,7 @@ class MachineUnitTest(unittest.TestCase):
     def test_non_disk_vdi_ignored(self):
         m = models.Machine(dict())
 
-        vbd = Fake()
+        vbd = mock.Mock()
         vbd.is_vdi = True
         vbd.is_disk = False
 
@@ -34,7 +32,7 @@ class MachineUnitTest(unittest.TestCase):
     def test_machine_with_no_vdi_is_not_exportable(self):
         m = models.Machine(dict())
 
-        non_vdi = Fake()
+        non_vdi = mock.Mock()
         non_vdi.is_vdi = False
         non_vdi.is_disk = True
         m.vbds.append(non_vdi)

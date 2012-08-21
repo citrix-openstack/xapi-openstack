@@ -16,10 +16,6 @@ class ParseOptionsTestCase(unittest.TestCase):
         self.assertFalse(options.failed)
 
 
-class Fake(object):
-    pass
-
-
 class FunctionalTestCase(MockedXapiTestCase):
     DATA = {
         'VM': {

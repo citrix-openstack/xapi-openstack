@@ -1,9 +1,7 @@
 import unittest
+import mock
+
 from xapi_openstack import services
-
-
-class Fake(object):
-    pass
 
 
 class FakeXenAPISession(object):
@@ -20,7 +18,7 @@ class FakeXenAPISession(object):
         def get_all_records():
             print self._data
             return self._data.get('VM')
-        fake = Fake()
+        fake = mock.Mock()
         fake.get_all_records = get_all_records
         return fake
 
@@ -29,7 +27,7 @@ class FakeXenAPISession(object):
         def get_all_records():
             return self._data.get('VBD')
 
-        fake = Fake()
+        fake = mock.Mock()
         fake.get_all_records = get_all_records
         return fake
 
@@ -37,7 +35,7 @@ class FakeXenAPISession(object):
     def VDI(self):
         def get_all_records():
             return self._data.get('VDI')
-        fake = Fake()
+        fake = mock.Mock()
         fake.get_all_records = get_all_records
         return fake
 
@@ -45,7 +43,7 @@ class FakeXenAPISession(object):
     def SR(self):
         def get_all_records():
             return self._data.get('SR')
-        fake = Fake()
+        fake = mock.Mock()
         fake.get_all_records = get_all_records
         return fake
 
@@ -56,7 +54,7 @@ class FakeXenAPIModule(object):
         self._data = data or dict()
 
     def Session(self, url=None):
-        result = Fake()
+        result = mock.Mock()
         result.xenapi = FakeXenAPISession(url, self._data)
         self._sessions.append(result.xenapi)
         return result
