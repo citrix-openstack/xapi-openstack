@@ -13,7 +13,17 @@ You can use the output to export those files to the cloud.
 
 Upload VHD files to OpenStack (In Progress)
 -------------------------------------------
-You will need the appropriate XenAPI Host plugins on your XenServer host.
+ *  You will need the appropriate XenAPI Host plugins on your XenServer host.
+
+ *  Select a vhd to upload with the list tool.
+
+ *  Create an image on glance:
+
+    glance image-create --name upload_trial
+
+ And check the id of the new image. The status of the image should be "Queued"
+
+ *  Upload the contents:
 
     upload_vhd root xapipass https://yourxenserver ks.user ks.password \
     tenant_name http://yourkeystone/v2.0 vhd_uuid image_uuid
