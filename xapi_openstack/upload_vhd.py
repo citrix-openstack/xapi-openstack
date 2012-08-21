@@ -4,7 +4,7 @@ from xapi_openstack.services import (
     ValidatingCommand, ConnectRequest
 )
 
-from xapi_openstack.models import KSClient
+from xapi_openstack.models import KSClient, XAPISession
 
 
 class ConnectToXAPISchema(Schema):
@@ -22,15 +22,6 @@ class ConnectToXAPI(ValidatingCommand):
             self.args['user'],
             self.args['password'])
         return XAPISession(session)
-
-
-class XAPISession(object):
-    def __init__(self, session):
-        self.session = session
-
-    def get_single_host(self, session=None):
-        host, = self.session.xenapi.host.get_all()
-        return host
 
 
 class UploadVHDSchema(Schema):

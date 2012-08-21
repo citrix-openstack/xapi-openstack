@@ -93,3 +93,10 @@ class KSClient(object):
         return self._get_endpoint_urlobj().port
 
 
+class XAPISession(object):
+    def __init__(self, session):
+        self.session = session
+
+    def get_single_host(self, session=None):
+        host, = self.session.xenapi.host.get_all()
+        return host

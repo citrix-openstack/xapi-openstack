@@ -90,3 +90,15 @@ class VDITestCase(unittest.TestCase):
             'uuid': 'someuuid'
         })
         self.assertEquals('someuuid', vdi.uuid)
+
+
+class XAPISessionTestCase(unittest.TestCase):
+    def test_get_single_host(self):
+        myhost = object()
+        session = mock.Mock()
+        session.xenapi.host.get_all.return_value = [myhost]
+
+        xapi_session = models.XAPISession(session)
+        result = xapi_session.get_single_host(session=session)
+
+        self.assertEquals(myhost, result)
