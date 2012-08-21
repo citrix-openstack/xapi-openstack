@@ -3,6 +3,9 @@ import XenAPI as xenapi
 
 from xapi_openstack import models
 
+from formencode import validators, Schema, Invalid
+
+
 logger = logging.getLogger(__name__)
 
 
@@ -57,6 +60,13 @@ class ValidatingCommand(object):
 
     def validate(self):
         self.schema().to_python(self.args, None)
+
+
+class ConnectRequest(Schema):
+    user = validators.String(not_empty=True)
+    password = validators.String(not_empty=True)
+    tenant_name = validators.String(not_empty=True)
+    auth_url = validators.String(not_empty=True)
 
 
 
