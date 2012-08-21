@@ -46,9 +46,6 @@ class ConnectToXAPITestCase(unittest.TestCase):
             session, result.session)
 
 
-
-
-
 class KSClientTestCase(unittest.TestCase):
     def test_auth_token(self):
         atoken = object()
