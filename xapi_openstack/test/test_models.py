@@ -151,7 +151,6 @@ class KSClientTestCase(unittest.TestCase):
         self.assertEquals(atoken, ksclient.auth_token)
 
     def test_glance_host_port(self):
-        atoken = object()
         client = mock.Mock()
         client.service_catalog.url_for.return_value = "http://127.0.0.1:9292"
 

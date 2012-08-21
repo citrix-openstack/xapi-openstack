@@ -2,7 +2,6 @@ import logging
 from formencode import validators, Schema, variabledecode
 
 from xapi_openstack import services
-from xapi_openstack.models import KSClient, XAPISession
 
 import argparse
 

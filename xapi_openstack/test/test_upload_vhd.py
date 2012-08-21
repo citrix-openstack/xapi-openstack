@@ -1,9 +1,8 @@
 import unittest
-import mock
 import textwrap
 
 from xapi_openstack.upload_vhd import (
-    UploadVHD, KSClient, collect_args
+    UploadVHD, collect_args
 )
 from xapi_openstack import services
 

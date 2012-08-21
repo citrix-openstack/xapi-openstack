@@ -111,7 +111,7 @@ class XAPISession(object):
         return host
 
     def get_sr_uuid_by_vdi(self, vdi_uuid):
-        for ref, record in self.session.xenapi.VDI.get_all_records().items():
+        for _, record in self.session.xenapi.VDI.get_all_records().items():
             if vdi_uuid == record.get('uuid'):
                 srs = self.session.xenapi.SR.get_all_records()
                 return srs[record.get('SR')]['uuid']

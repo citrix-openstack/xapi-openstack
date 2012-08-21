@@ -13,7 +13,7 @@ def get_session(options):
     logger.debug('New session to: %s', options.xapi_url)
     session = xenapi.Session(options.xapi_url)
     logger.debug('Authenticating...')
-    result = session.xenapi.login_with_password(
+    session.xenapi.login_with_password(
         options.username, options.password)
     return session
 
@@ -46,7 +46,6 @@ def machines(session):
         logging.debug(v)
         machine = models.Machine(v)
         machines[k] = machine
-        vbdrefs = machine.vbdrefs
         add_vbds(session, machine)
 
     return machines

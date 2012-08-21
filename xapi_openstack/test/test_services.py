@@ -183,7 +183,7 @@ class ConnectToKeystoneTestCase(unittest.TestCase):
             tenant_name="demo",
             auth_url="http://127.0.0.1:5000/v2.0"))
 
-        client = connect(ksclient=ksclient)
+        connect(ksclient=ksclient)
 
         self.assertEquals(
             [c.Client(
