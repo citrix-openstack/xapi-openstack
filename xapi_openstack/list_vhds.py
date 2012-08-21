@@ -1,7 +1,7 @@
 import logging
 import sys
 from optparse import OptionParser
-from xapi_openstack import models
+
 from xapi_openstack import services
 
 
@@ -58,7 +58,7 @@ def main(args, writeline=None):
         if machine.exportable:
             writeline("vm: %s (%s)" % (machine.label, machine.uuid))
             for vbd in machine.disk_vbds:
-                vdi = models.VDI(services.get_vdi(session, vbd.vdi_ref))
+                vdi = services.get_vdi(session, vbd.vdi_ref)
                 writeline("  disk: " + vdi.uuid)
                 services.add_sr(session, vdi)
                 writeline(

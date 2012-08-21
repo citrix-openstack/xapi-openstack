@@ -22,7 +22,7 @@ def get_vbd(session, vbdref):
 def get_vdi(session, vdiref):
     vdi = session.xenapi.VDI.get_all_records()[vdiref]
     logger.debug('VDI: %s', vdi)
-    return vdi
+    return models.VDI(vdi)
 
 
 def add_vbds(session, machine):
