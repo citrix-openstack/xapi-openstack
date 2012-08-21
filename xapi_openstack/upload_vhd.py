@@ -1,22 +1,15 @@
 from formencode import validators, Schema, Invalid
 from urlparse import urlparse
 
+from xapi_openstack.services import ValidatingCommand
+
+
 
 class ConnectRequest(Schema):
     user = validators.String(not_empty=True)
     password = validators.String(not_empty=True)
     tenant_name = validators.String(not_empty=True)
     auth_url = validators.String(not_empty=True)
-
-
-class ValidatingCommand(object):
-    schema = None
-
-    def __init__(self, args=None):
-        self.args = args or dict()
-
-    def validate(self):
-        self.schema().to_python(self.args, None)
 
 
 class ConnectToKeystone(ValidatingCommand):

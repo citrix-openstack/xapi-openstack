@@ -47,3 +47,16 @@ def machines(session):
         add_vbds(session, machine)
 
     return machines
+
+
+class ValidatingCommand(object):
+    schema = None
+
+    def __init__(self, args=None):
+        self.args = args or dict()
+
+    def validate(self):
+        self.schema().to_python(self.args, None)
+
+
+
