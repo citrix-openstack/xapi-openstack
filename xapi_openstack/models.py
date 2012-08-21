@@ -53,6 +53,7 @@ class VBD(object):
 class VDI(object):
     def __init__(self, data):
         self.data = data
+        self.sr = None   # To be loaded later
 
     @property
     def uuid(self):
