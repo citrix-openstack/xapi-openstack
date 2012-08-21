@@ -6,7 +6,7 @@ setup(
     version='0.0',
     description='Xen API and OpenStack related utilities',
     packages=['xapi_openstack'],
-    install_requires=['XenAPI', 'formencode'],
+    install_requires=['XenAPI', 'FormEncode', 'python-glanceclient'],
     entry_points = {
         'console_scripts' : [
             'list_vhds = xapi_openstack.scripts:list_vhds',
