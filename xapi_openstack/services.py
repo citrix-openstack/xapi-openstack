@@ -69,4 +69,14 @@ class ConnectRequest(Schema):
     auth_url = validators.String(not_empty=True)
 
 
+class ConnectToKeystone(ValidatingCommand):
+    schema = ConnectRequest
 
+    def __call__(self, ksclient=None):
+        return models.KSClient(ksclient.Client(
+            username=self.args['user'],
+            password=self.args['password'],
+            insecure=False,
+            tenant_name=self.args['tenant_name'],
+            auth_url=self.args['auth_url'],
+            tenant_id=None))

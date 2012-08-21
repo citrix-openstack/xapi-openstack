@@ -150,3 +150,47 @@ class MachineTestCase(unittest.TestCase):
         m1 = services.machines(FakeXenAPIModule(data).Session())['m1']
         self.assertEquals(2, len(m1.vbds))
         self.assertEquals('vdi1', m1.vbds[0].vdi_ref)
+
+
+class ConnectToKeystoneTestCase(unittest.TestCase):
+
+    def test_all_parameters_given_is_valid(self):
+        connect = services.ConnectToKeystone(dict(
+            user="user",
+            password="password",
+            tenant_name="demo",
+            auth_url="http://127.0.0.1:5000/v2.0"))
+
+        try:
+            connect.validate()
+        except services.Invalid:
+            raise AssertionError()
+
+    def test_missing_parameter(self):
+        connect = services.ConnectToKeystone(dict(
+            password="password",
+            tenant_name="demo",
+            auth_url="http://127.0.0.1:5000/v2.0"))
+
+        self.assertRaises(services.Invalid, connect.validate)
+
+    def test_keystone_client_created(self):
+        ksclient = mock.Mock()
+        c = mock.call
+
+        connect = services.ConnectToKeystone(dict(
+            user="user",
+            password="password",
+            tenant_name="demo",
+            auth_url="http://127.0.0.1:5000/v2.0"))
+
+        client = connect(ksclient=ksclient)
+
+        self.assertEquals(
+            [c.Client(
+                username="user", password="password",
+                tenant_id=None, tenant_name="demo",
+                auth_url="http://127.0.0.1:5000/v2.0",
+                insecure=False)],
+            ksclient.mock_calls
+        )

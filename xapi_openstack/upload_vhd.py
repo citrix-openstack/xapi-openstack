@@ -7,19 +7,6 @@ from xapi_openstack.services import (
 from xapi_openstack.models import KSClient
 
 
-class ConnectToKeystone(ValidatingCommand):
-    schema = ConnectRequest
-
-    def __call__(self, ksclient=None):
-        return KSClient(ksclient.Client(
-            username=self.args['user'],
-            password=self.args['password'],
-            insecure=False,
-            tenant_name=self.args['tenant_name'],
-            auth_url=self.args['auth_url'],
-            tenant_id=None))
-
-
 class ConnectToXAPISchema(Schema):
     url = validators.String(not_empty=True)
     user = validators.String(not_empty=True)
