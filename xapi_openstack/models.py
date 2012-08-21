@@ -1,4 +1,5 @@
 from urlparse import urlparse
+import pickle
 
 
 class Machine(object):
@@ -97,7 +98,14 @@ class XAPISession(object):
     def __init__(self, session):
         self.session = session
 
-    def get_single_host(self, session=None):
+    def upload_vhd(self, params):
+        self.session.xenapi.host.call_plugin(
+            self.get_single_host(),
+            'glance',
+            'upload_vhd',
+            dict(params=pickle.dumps(params)))
+
+    def get_single_host(self):
         host, = self.session.xenapi.host.get_all()
         return host
 

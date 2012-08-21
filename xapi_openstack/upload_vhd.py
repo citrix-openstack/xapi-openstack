@@ -2,7 +2,7 @@ import logging
 from formencode import validators, Schema, Invalid, variabledecode
 
 from xapi_openstack.services import (
-    ValidatingCommand, ConnectRequest
+    ValidatingCommand, ConnectRequest, ConnectToKeystone
 )
 
 from xapi_openstack.models import KSClient, XAPISession
@@ -44,14 +44,42 @@ class UploadVHD(ValidatingCommand):
 
     def __call__(self):
         self.validate()
+
+        vhd_uuid = self.args['vhd_uuid']
+        image_uuid = self.args['image_uuid']
+
         connect_to_xapi = ConnectToXAPI(self.args['xapi'])
 
         import XenAPI
         session = connect_to_xapi(xapi=XenAPI)
 
-        sr_uuid = session.get_sr_uuid_by_vdi(self.args['vhd_uuid'])
+        sr_uuid = session.get_sr_uuid_by_vdi(vhd_uuid)
         sr_path = '/var/run/sr-mount/{0}'.format(sr_uuid)
-        logger.info('assuming sr is at: %s', sr_path)
+        logger.info('sr_path: %s', sr_path)
+
+        from keystoneclient.v2_0 import client as ksclient
+
+        connect_to_keystone = ConnectToKeystone(self.args['ks'])
+        client = connect_to_keystone(ksclient)
+
+        glance_host = client.glance_host
+        glance_port = client.glance_port
+        auth_token = client.auth_token
+        logger.info('glance at host: %s', glance_host)
+        logger.info('glance at port: %s', glance_port)
+        logger.info('auth_token: %s', auth_token)
+
+        params = {
+            'vdi_uuids': [vhd_uuid],
+            'image_id': image_uuid,
+            'glance_host': glance_host,
+            'glance_port': glance_port,
+            'sr_path': sr_path,
+            'auth_token': auth_token,
+            'properties': {}
+        }
+
+        session.upload_vhd(params)
 
 
 def collect_args(argv):

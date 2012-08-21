@@ -16,4 +16,4 @@ Upload VHD files to OpenStack (In Progress)
 You will need the appropriate XenAPI Host plugins on your XenServer host.
 
     upload_vhd root xapipass https://yourxenserver ks.user ks.password \
-    ks.tenant_name ks.auth_url vhd_uuid image_uuid
+    tenant_name http://yourkeystone/v2.0 vhd_uuid image_uuid

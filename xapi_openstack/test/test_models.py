@@ -1,5 +1,6 @@
 import unittest
 import mock
+import pickle
 
 from xapi_openstack import models
 
@@ -99,9 +100,24 @@ class XAPISessionTestCase(unittest.TestCase):
         session.xenapi.host.get_all.return_value = [myhost]
 
         xapi_session = models.XAPISession(session)
-        result = xapi_session.get_single_host(session=session)
+        result = xapi_session.get_single_host()
 
         self.assertEquals(myhost, result)
+
+    def test_call_glance_plugin(self):
+        session = mock.Mock()
+        xapi_session = models.XAPISession(session)
+        xapi_session.get_single_host = lambda: 'host'  # monkey-patch
+
+        xapi_session.upload_vhd(dict(key='value'))
+
+        self.assertIn(
+            mock.call.xenapi.host.call_plugin(
+                'host',
+                'glance',
+                'upload_vhd',
+                dict(params=pickle.dumps(dict(key='value')))),
+            session.mock_calls)
 
     def test_get_sr_uuid_by_vdi(self):
         session = mock.Mock()
