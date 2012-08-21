@@ -138,3 +138,24 @@ class XAPISessionTestCase(unittest.TestCase):
         self.assertEquals(
             'sruuid',
             xapi_session.get_sr_uuid_by_vdi('vdiuuid'))
+
+
+class KSClientTestCase(unittest.TestCase):
+    def test_auth_token(self):
+        atoken = object()
+        client = mock.Mock()
+        client.auth_token = atoken
+
+        ksclient = models.KSClient(client)
+
+        self.assertEquals(atoken, ksclient.auth_token)
+
+    def test_glance_host_port(self):
+        atoken = object()
+        client = mock.Mock()
+        client.service_catalog.url_for.return_value = "http://127.0.0.1:9292"
+
+        ksclient = models.KSClient(client)
+
+        self.assertEquals("127.0.0.1", ksclient.glance_host)
+        self.assertEquals(9292, ksclient.glance_port)
