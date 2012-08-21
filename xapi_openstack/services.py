@@ -80,3 +80,20 @@ class ConnectToKeystone(ValidatingCommand):
             tenant_name=self.args['tenant_name'],
             auth_url=self.args['auth_url'],
             tenant_id=None))
+
+
+class ConnectToXAPISchema(Schema):
+    url = validators.String(not_empty=True)
+    user = validators.String(not_empty=True)
+    password = validators.String(not_empty=True)
+
+
+class ConnectToXAPI(ValidatingCommand):
+    schema = ConnectToXAPISchema
+
+    def __call__(self, xapi=None):
+        session = xapi.Session(self.args['url'])
+        session.login_with_password(
+            self.args['user'],
+            self.args['password'])
+        return models.XAPISession(session)

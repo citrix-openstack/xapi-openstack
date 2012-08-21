@@ -1,10 +1,7 @@
 import logging
-from formencode import validators, Schema, Invalid, variabledecode
+from formencode import validators, Schema, variabledecode
 
-from xapi_openstack.services import (
-    ValidatingCommand, ConnectRequest, ConnectToKeystone
-)
-
+from xapi_openstack import services
 from xapi_openstack.models import KSClient, XAPISession
 
 import argparse
@@ -15,31 +12,14 @@ logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
 
-class ConnectToXAPISchema(Schema):
-    url = validators.String(not_empty=True)
-    user = validators.String(not_empty=True)
-    password = validators.String(not_empty=True)
-
-
-class ConnectToXAPI(ValidatingCommand):
-    schema = ConnectToXAPISchema
-
-    def __call__(self, xapi=None):
-        session = xapi.Session(self.args['url'])
-        session.login_with_password(
-            self.args['user'],
-            self.args['password'])
-        return XAPISession(session)
-
-
 class UploadVHDSchema(Schema):
-    xapi = ConnectToXAPISchema()
-    ks = ConnectRequest()
+    xapi = services.ConnectToXAPISchema()
+    ks = services.ConnectRequest()
     vhd_uuid = validators.String(not_empty=True)
     image_uuid = validators.String(not_empty=True)
 
 
-class UploadVHD(ValidatingCommand):
+class UploadVHD(services.ValidatingCommand):
     schema = UploadVHDSchema
 
     def __call__(self):
@@ -48,7 +28,7 @@ class UploadVHD(ValidatingCommand):
         vhd_uuid = self.args['vhd_uuid']
         image_uuid = self.args['image_uuid']
 
-        connect_to_xapi = ConnectToXAPI(self.args['xapi'])
+        connect_to_xapi = services.ConnectToXAPI(self.args['xapi'])
 
         import XenAPI
         session = connect_to_xapi(xapi=XenAPI)
@@ -59,7 +39,7 @@ class UploadVHD(ValidatingCommand):
 
         from keystoneclient.v2_0 import client as ksclient
 
-        connect_to_keystone = ConnectToKeystone(self.args['ks'])
+        connect_to_keystone = services.ConnectToKeystone(self.args['ks'])
         client = connect_to_keystone(ksclient)
 
         glance_host = client.glance_host

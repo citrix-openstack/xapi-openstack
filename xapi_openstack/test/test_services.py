@@ -193,3 +193,43 @@ class ConnectToKeystoneTestCase(unittest.TestCase):
                 insecure=False)],
             ksclient.mock_calls
         )
+
+
+class ConnectToXAPITestCase(unittest.TestCase):
+    def test_valid_parameter_set(self):
+        connect = services.ConnectToXAPI(dict(
+            url='xapiurl', user='xapiuser', password='xapipass'))
+
+        try:
+            connect.validate()
+        except services.Invalid:
+            raise AssertionError()
+
+    def test_missing_a_parameter(self):
+        connect = services.ConnectToXAPI(dict(
+            user='xapiuser', password='xapipass'))
+
+        with self.assertRaises(services.Invalid):
+            connect.validate()
+
+    def test_get_xapi_session(self):
+        session = mock.Mock()
+        xapi = mock.Mock()
+        xapi.Session.return_value = session
+        c = mock.call
+
+        connect = services.ConnectToXAPI(dict(
+            url="someurl", user='xapiuser',
+            password='xapipass'))
+
+        result = connect(xapi=xapi)
+
+        self.assertEquals(
+            [
+                c.Session("someurl"),
+                c.Session().login_with_password('xapiuser', 'xapipass')
+            ],
+            xapi.mock_calls)
+
+        self.assertEquals(
+            session, result.session)
