@@ -16,7 +16,6 @@ class FakeXenAPISession(object):
     @property
     def VM(self):
         def get_all_records():
-            print self._data
             return self._data.get('VM')
         fake = mock.Mock()
         fake.get_all_records = get_all_records

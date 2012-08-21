@@ -1,8 +1,9 @@
 import unittest
 import mock
+import textwrap
 
 from xapi_openstack.upload_vhd import (
-    ConnectToXAPI, Invalid, UploadVHD, KSClient,
+    ConnectToXAPI, Invalid, UploadVHD, KSClient, collect_args
 )
 
 
@@ -93,3 +94,32 @@ class UploadVHDTestCase(unittest.TestCase):
 
         with self.assertRaises(Invalid):
             upload.validate()
+
+
+class TestArgParsing(unittest.TestCase):
+    def test_option_collecting(self):
+        self.assertEquals({
+            'xapi': {
+                'user': 'xapiusr',
+                'password': 'xapipass',
+                'url': 'xapiurl',
+            },
+            'ks': {
+                'user': 'ksuser',
+                'password': 'kspass',
+                'tenant_name': 'tenant',
+                'auth_url': 'ksurl',
+            },
+            'vhd_uuid': 'vhduu',
+            'image_uuid': 'imageuu'
+        }, collect_args(textwrap.dedent("""
+            xapiusr
+            xapipass
+            xapiurl
+            ksuser
+            kspass
+            tenant
+            ksurl
+            vhduu
+            imageuu
+            """).strip().split()))

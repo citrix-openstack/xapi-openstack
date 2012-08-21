@@ -10,7 +10,8 @@ setup(
     entry_points = {
         'console_scripts' : [
             'add_glance_plugin = xapi_openstack.scripts:add_glance_plugin',
-            'list_vhds = xapi_openstack.scripts:list_vhds'
+            'list_vhds = xapi_openstack.scripts:list_vhds',
+            'upload_vhd = xapi_openstack.scripts:upload_vhd'
         ]
     }
 )

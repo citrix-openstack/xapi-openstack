@@ -102,3 +102,23 @@ class XAPISessionTestCase(unittest.TestCase):
         result = xapi_session.get_single_host(session=session)
 
         self.assertEquals(myhost, result)
+
+    def test_get_sr_uuid_by_vdi(self):
+        session = mock.Mock()
+        session.xenapi.VDI.get_all_records.return_value = {
+            'vdi1': {
+                'uuid': 'vdiuuid',
+                'SR': 'srref'
+            }
+        }
+        session.xenapi.SR.get_all_records.return_value = {
+            'srref': {
+                'uuid': 'sruuid'
+            }
+        }
+
+        xapi_session = models.XAPISession(session)
+
+        self.assertEquals(
+            'sruuid',
+            xapi_session.get_sr_uuid_by_vdi('vdiuuid'))
