@@ -1,3 +1,6 @@
+from urlparse import urlparse
+
+
 class Machine(object):
     def __init__(self, data):
         self.data = data
@@ -66,3 +69,27 @@ class SR(object):
     @property
     def uuid(self):
         return self.data.get('uuid')
+
+
+class KSClient(object):
+    def __init__(self, client):
+        self.client = client
+
+    @property
+    def auth_token(self):
+        return self.client.auth_token
+
+    def _get_endpoint_urlobj(self):
+        return urlparse(
+            self.client.service_catalog.url_for(
+                service_type="image", endpoint_type="publicURL"))
+
+    @property
+    def glance_host(self):
+        return self._get_endpoint_urlobj().hostname
+
+    @property
+    def glance_port(self):
+        return self._get_endpoint_urlobj().port
+
+

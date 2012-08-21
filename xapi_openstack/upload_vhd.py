@@ -1,9 +1,10 @@
 from formencode import validators, Schema, Invalid
-from urlparse import urlparse
 
 from xapi_openstack.services import (
     ValidatingCommand, ConnectRequest
 )
+
+from xapi_openstack.models import KSClient
 
 
 class ConnectToKeystone(ValidatingCommand):
@@ -17,28 +18,6 @@ class ConnectToKeystone(ValidatingCommand):
             tenant_name=self.args['tenant_name'],
             auth_url=self.args['auth_url'],
             tenant_id=None))
-
-
-class KSClient(object):
-    def __init__(self, client):
-        self.client = client
-
-    @property
-    def auth_token(self):
-        return self.client.auth_token
-
-    def _get_endpoint_urlobj(self):
-        return urlparse(
-            self.client.service_catalog.url_for(
-                service_type="image", endpoint_type="publicURL"))
-
-    @property
-    def glance_host(self):
-        return self._get_endpoint_urlobj().hostname
-
-    @property
-    def glance_port(self):
-        return self._get_endpoint_urlobj().port
 
 
 class ConnectToXAPISchema(Schema):
