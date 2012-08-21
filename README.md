@@ -19,14 +19,11 @@ Upload VHD files to OpenStack (In Progress)
 
  *  Create an image on glance:
 
-
-    glance image-create --name upload_trial
-
+        glance image-create --name upload_trial
 
  And check the id of the new image. The status of the image should be "Queued"
 
  *  Upload the contents:
 
-
-    upload_vhd root xapipass https://yourxenserver ks.user ks.password \
-    tenant_name http://yourkeystone/v2.0 vhd_uuid image_uuid
+        upload_vhd root xapipass https://yourxenserver ks.user ks.password \
+        tenant_name http://yourkeystone/v2.0 vhd_uuid image_uuid
