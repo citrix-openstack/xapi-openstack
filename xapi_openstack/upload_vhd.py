@@ -55,7 +55,8 @@ class UploadVHD(services.ValidatingCommand):
             'glance_port': glance_port,
             'sr_path': sr_path,
             'auth_token': auth_token,
-            'properties': {}
+            'properties': {},
+            'glance_use_ssl': False
         }
 
         session.upload_vhd(params)
