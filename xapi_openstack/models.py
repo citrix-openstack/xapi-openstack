@@ -104,7 +104,7 @@ class XAPISession(object):
             self.get_single_host(),
             'glance',
             'upload_vhd',
-            dict(params=pickle.dumps(params)))
+            dict(params=pickle.dumps(dict(args=[], kwargs=params))))
 
     def get_single_host(self):
         host, = self.session.xenapi.host.get_all()
