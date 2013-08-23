@@ -54,13 +54,17 @@ class UploadVHD(services.ValidatingCommand):
             'glance_host': glance_host,
             'glance_port': glance_port,
             'sr_path': sr_path,
-            'auth_token': auth_token,
+            'extra_headers': generate_identity_headers(client),
             'properties': {},
             'glance_use_ssl': False
         }
 
         session.upload_vhd(params)
 
+def generate_identity_headers(client):
+    return {
+        'X-Auth-Token': client.auth_token,
+    }
 
 def collect_args(argv):
     parser = argparse.ArgumentParser()
